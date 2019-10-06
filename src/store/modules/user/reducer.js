@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import produce from 'immer';
 
@@ -6,12 +7,21 @@ const INITIAL_STATE = {
 };
 
 export default function auth(state = INITIAL_STATE, action) {
-    switch (action.type) {
-        case '@auth/SIGN_IN_SUCESS':
-            return produce(state, draft => {
-                draft.token = action.payload.user;
-            });
-        default:
-         return state;
-    }
+    return produce(state, draft => {
+        switch (action.type) {
+            case '@auth/SIGN_IN_SUCESS':
+                draft.profile = action.payload.user;
+                break;
+
+            case '@user/UPDATE_PROFILE_SUCCESS': {
+                draft.profile = action.payload.profile;
+                break;
+            }
+            case '@auth/SIGN_OUT': {
+                draft.profile = null;
+                break;
+            }
+            default:
+        }
+    });
 }
